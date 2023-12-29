@@ -15,6 +15,17 @@ class SplashScreenPage extends StatefulWidget {
 class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MaterialApp(
+      title: "RamseysMovie",
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: Center(
+          child: Container(
+        height: 200,
+        width: 200,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.contain, image: AssetImage('assets/images/'))),
+      )),
+    );
   }
 }
