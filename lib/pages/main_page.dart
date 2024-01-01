@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/search_category.dart';
 
 class MainPage extends ConsumerWidget {
   late double _deviceHeight;
@@ -74,6 +75,10 @@ class MainPage extends ConsumerWidget {
 
   Widget _topBarWidget() {
     return Container(
+      margin: EdgeInsets.only(
+          top: _deviceHeight * 0.03,
+          left: _deviceHeight * 0.01,
+          right: _deviceHeight * 0.01),
       height: _deviceHeight * 0.08,
       decoration: BoxDecoration(
         color: Colors.black54,
@@ -83,22 +88,75 @@ class MainPage extends ConsumerWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [_searchFileWidget()]),
+          children: [_searchFileWidget(), _categorySelectionWidget()]),
     );
   }
 
   Widget _searchFileWidget() {
+    final _border = InputBorder.none;
     return Container(
       width: _deviceWidth * 0.50,
       height: _deviceHeight * 0.05,
       child: TextField(
         controller: _searchTextFieldController,
         onSubmitted: (_input) {},
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          focusedBorder: ,
-        ),
+            focusedBorder: _border,
+            border: _border,
+            prefixIcon: const Icon(
+              Icons.search,
+              color: Colors.white54,
+            ),
+            hintStyle: TextStyle(
+              color: Colors.white54,
+            ),
+            filled: false,
+            fillColor: Colors.white54,
+            hintText: "Search....."),
       ),
+    );
+  }
+
+  Widget _categorySelectionWidget() {
+    return DropdownButton(
+      dropdownColor: Colors.black38,
+      value: SearchCategory.popular,
+      icon: const Icon(
+        Icons.menu,
+        color: Colors.white54,
+      ),
+      underline: Container(
+        height: 1,
+        color: Colors.white54,
+      ),
+      onChanged: (_value) {},
+      items: [
+        DropdownMenuItem(
+            value: SearchCategory.popular,
+            child: Text(
+              SearchCategory.popular,
+              style: const TextStyle(
+                color: Colors.white54,
+              ),
+            )),
+        DropdownMenuItem(
+            value: SearchCategory.upcoming,
+            child: Text(
+              SearchCategory.upcoming,
+              style: const TextStyle(
+                color: Colors.white54,
+              ),
+            )),
+        DropdownMenuItem(
+            value: SearchCategory.none,
+            child: Text(
+              SearchCategory.none,
+              style: const TextStyle(
+                color: Colors.white54,
+              ),
+            ))
+      ],
     );
   }
 }
