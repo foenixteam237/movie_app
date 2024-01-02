@@ -9,7 +9,8 @@ pipeline {
        
         stage('run') {
             steps {
-                sh "flutter run"
+                //sh "flutter run"
+                flutter doctor
             }
         }
         
