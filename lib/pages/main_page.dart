@@ -2,20 +2,33 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movie_app/controllers/main_page_data_controller.dart';
+import 'package:movie_app/models/main_page.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/widgets/movie_tile.dart';
 import '../models/search_category.dart';
+
+final mainPageDataControllerProvider =
+    StateNotifierProvider<MainPageDataController, MainPageData>(
+        (ref) => MainPageDataController());
 
 class MainPage extends ConsumerWidget {
   late double _deviceHeight;
   late double _deviceWidth;
 
+  late MainPageDataController _mainPageDataController;
+  late MainPageData _mainPageData;
+
   late TextEditingController _searchTextFieldController;
 
   @override
-  Widget build(BuildContext context, WidgetRef watch) {
+  Widget build(BuildContext context, WidgetRef ref) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+
+    _mainPageDataController =
+        ref.watch(mainPageDataControllerProvider.notifier);
+    _mainPageData = ref.watch(mainPageDataControllerProvider);
 
     _searchTextFieldController = TextEditingController();
     return _buildUI();
@@ -168,20 +181,8 @@ class MainPage extends ConsumerWidget {
   }
 
   Widget _movieListViewWidget() {
-    final List<Movie> _movies = [];
+    final List<Movie> _movies = _mainPageData.movies;
 
-    for (var i = 0; i < 20; i++) {
-      _movies.add(Movie(
-          name: 'mortal kombat',
-          language: 'en',
-          isAdul: true,
-          desciption:
-              'When a peaceful colony on the edge of the galaxy finds itself threatened by the armies of the tyrannical Regent Balisarius, they dispatch Kora, a young woman with a mysterious past, to seek out warriors from neighboring planets to help them take a stand.',
-          posterPath: "/ui4DrH1cKk2vkHshcUcGt2lKxCm.jpg",
-          backDropPath: '/ui4DrH1cKk2vkHshcUcGt2lKxCm.jpg',
-          rating: 6.7,
-          releasedDate: '2021/02/23'));
-    }
     if (_movies.isNotEmpty) {
       return ListView.builder(
           itemCount: _movies.length,
