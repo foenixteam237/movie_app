@@ -24,7 +24,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(seconds: 5)).then((_) => _setup(context).then(
+    Future.delayed(Duration(seconds: 3)).then((_) => _setup(context).then(
           (_) => widget.onInitializationComplete(),
         ));
   }

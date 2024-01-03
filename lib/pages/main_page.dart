@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/widgets/movie_tile.dart';
 import '../models/search_category.dart';
 
 class MainPage extends ConsumerWidget {
@@ -21,6 +23,7 @@ class MainPage extends ConsumerWidget {
 
   Widget _buildUI() {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       body: Container(
         height: _deviceHeight,
@@ -60,14 +63,20 @@ class MainPage extends ConsumerWidget {
 
   Widget _foregroundWidget() {
     return Container(
-      padding: EdgeInsets.fromLTRB(0, _deviceHeight * 0.02, 0, 0),
-      width: _deviceHeight * 0.88,
+      padding: EdgeInsets.fromLTRB(0, _deviceHeight * 0.01, 0, 0),
+      width: _deviceWidth * 0.95,
       child: Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _topBarWidget(),
+          Container(
+            alignment: Alignment.center,
+            height: _deviceHeight * 0.83,
+            padding: EdgeInsets.symmetric(vertical: _deviceHeight * 0.01),
+            child: _movieListViewWidget(),
+          )
         ],
       ),
     );
@@ -76,9 +85,7 @@ class MainPage extends ConsumerWidget {
   Widget _topBarWidget() {
     return Container(
       margin: EdgeInsets.only(
-          top: _deviceHeight * 0.03,
-          left: _deviceHeight * 0.01,
-          right: _deviceHeight * 0.01),
+          left: _deviceHeight * 0.01, right: _deviceHeight * 0.01),
       height: _deviceHeight * 0.08,
       decoration: BoxDecoration(
         color: Colors.black54,
@@ -108,7 +115,7 @@ class MainPage extends ConsumerWidget {
               Icons.search,
               color: Colors.white54,
             ),
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               color: Colors.white54,
             ),
             filled: false,
@@ -158,5 +165,45 @@ class MainPage extends ConsumerWidget {
             ))
       ],
     );
+  }
+
+  Widget _movieListViewWidget() {
+    final List<Movie> _movies = [];
+
+    for (var i = 0; i < 20; i++) {
+      _movies.add(Movie(
+          name: 'mortal kombat',
+          language: 'en',
+          isAdul: true,
+          desciption:
+              'When a peaceful colony on the edge of the galaxy finds itself threatened by the armies of the tyrannical Regent Balisarius, they dispatch Kora, a young woman with a mysterious past, to seek out warriors from neighboring planets to help them take a stand.',
+          posterPath: "/ui4DrH1cKk2vkHshcUcGt2lKxCm.jpg",
+          backDropPath: '/ui4DrH1cKk2vkHshcUcGt2lKxCm.jpg',
+          rating: 6.7,
+          releasedDate: '2021/02/23'));
+    }
+    if (_movies.isNotEmpty) {
+      return ListView.builder(
+          itemCount: _movies.length,
+          itemBuilder: (BuildContext _context, int _count) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: _deviceHeight * 0.01, horizontal: 0),
+              child: GestureDetector(
+                onTap: () {},
+                child: MovieTile(
+                    movie: _movies[_count],
+                    height: _deviceHeight * 0.20,
+                    width: _deviceWidth * 0.85),
+              ),
+            );
+          });
+    } else {
+      return const Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+        ),
+      );
+    }
   }
 }
