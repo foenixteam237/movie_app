@@ -31,6 +31,8 @@ class MainPage extends ConsumerWidget {
     _mainPageData = ref.watch(mainPageDataControllerProvider);
 
     _searchTextFieldController = TextEditingController();
+
+    _searchTextFieldController.text = _mainPageData.searchText;
     return _buildUI();
   }
 
@@ -119,7 +121,8 @@ class MainPage extends ConsumerWidget {
       height: _deviceHeight * 0.05,
       child: TextField(
         controller: _searchTextFieldController,
-        onSubmitted: (_input) {},
+        onSubmitted: (_input) =>
+            _mainPageDataController.updateTextSearch(_input),
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
             focusedBorder: _border,
@@ -141,7 +144,7 @@ class MainPage extends ConsumerWidget {
   Widget _categorySelectionWidget() {
     return DropdownButton(
       dropdownColor: Colors.black38,
-      value: SearchCategory.popular,
+      value: _mainPageData.searchCategory,
       icon: const Icon(
         Icons.menu,
         color: Colors.white54,
@@ -150,7 +153,9 @@ class MainPage extends ConsumerWidget {
         height: 1,
         color: Colors.white54,
       ),
-      onChanged: (_value) {},
+      onChanged: (_value) => _value.toString().isNotEmpty
+          ? _mainPageDataController.updateSearchCategory(_value.toString())
+          : null,
       items: [
         DropdownMenuItem(
             value: SearchCategory.popular,
@@ -181,24 +186,36 @@ class MainPage extends ConsumerWidget {
   }
 
   Widget _movieListViewWidget() {
-    final List<Movie> _movies = _mainPageData.movies;
-
-    if (_movies.isNotEmpty) {
-      return ListView.builder(
-          itemCount: _movies.length,
-          itemBuilder: (BuildContext _context, int _count) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: _deviceHeight * 0.01, horizontal: 0),
-              child: GestureDetector(
-                onTap: () {},
-                child: MovieTile(
-                    movie: _movies[_count],
-                    height: _deviceHeight * 0.20,
-                    width: _deviceWidth * 0.85),
-              ),
-            );
-          });
+    List<Movie> movies = _mainPageData.movies;
+    if (movies.isNotEmpty) {
+      return NotificationListener(
+          onNotification: (onScrollNotification) {
+            if (onScrollNotification is ScrollEndNotification) {
+              final before = onScrollNotification.metrics.extentBefore;
+              final max = onScrollNotification.metrics.maxScrollExtent;
+              if (before == max) {
+                _mainPageDataController.getMovies();
+                return true;
+              }
+              return false;
+            }
+            return false;
+          },
+          child: ListView.builder(
+              itemCount: movies.length,
+              itemBuilder: (BuildContext _context, int _count) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: _deviceHeight * 0.01, horizontal: 0),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: MovieTile(
+                        movie: movies[_count],
+                        height: _deviceHeight * 0.20,
+                        width: _deviceWidth * 0.85),
+                  ),
+                );
+              }));
     } else {
       return const Center(
         child: CircularProgressIndicator(

@@ -19,7 +19,7 @@ class HTTPService {
       {required Map<String, dynamic> query}) async {
     try {
       String _url = '$_base_url$_path';
-      Map<String, dynamic> _query = {'api_key': _api_key, 'language': 'en-US'};
+      Map<String, dynamic> _query = {'api_key': _api_key, 'language': 'fr-FR'};
       if (query != null) {
         _query.addAll(query);
       }
