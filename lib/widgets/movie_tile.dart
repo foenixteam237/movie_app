@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get_it/get_it.dart';
 import 'package:movie_app/models/movie.dart';
 
@@ -58,19 +59,28 @@ class MovieTile extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                movie.rating.toString(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+              RatingBar.builder(
+                initialRating: movie.rating.toDouble() / 2,
+                minRating: 1,
+                itemSize: width * 0.02,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: EdgeInsets.symmetric(horizontal: 3.0),
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
                 ),
-              )
+                onRatingUpdate: (rating) {
+                  print(rating);
+                },
+              ),
             ],
           ),
           Container(
             padding: EdgeInsets.fromLTRB(0, height * 0.02, 0, 0),
             child: Text(
-              '${movie.language.toUpperCase()} | R: ${(movie.isAdul)} | ${movie.releasedDate}',
+              '${movie.language.toUpperCase()} | R: ${(movie.isAdul ? '-18' : 'All age')} | ${movie.releasedDate}',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
