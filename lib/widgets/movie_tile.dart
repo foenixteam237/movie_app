@@ -70,7 +70,7 @@ class MovieTile extends StatelessWidget {
           Container(
             padding: EdgeInsets.fromLTRB(0, height * 0.02, 0, 0),
             child: Text(
-              '${movie.language.toUpperCase()} | R: ${movie.isAdul} | ${movie.releasedDate}',
+              '${movie.language.toUpperCase()} | R: ${(movie.isAdul)} | ${movie.releasedDate}',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,

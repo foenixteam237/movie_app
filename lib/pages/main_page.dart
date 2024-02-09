@@ -11,11 +11,16 @@ import '../models/search_category.dart';
 final mainPageDataControllerProvider =
     StateNotifierProvider<MainPageDataController, MainPageData>(
         (ref) => MainPageDataController());
+final selectedMoviePosterUrlProvider = StateProvider<String?>((ref) {
+  final movies = ref.watch(mainPageDataControllerProvider).movies;
+  return movies.length != 0 ? movies[0].posterUrl() : null;
+});
 
 class MainPage extends ConsumerWidget {
   late double _deviceHeight;
   late double _deviceWidth;
 
+  late var selectedMoviePosterUrl;
   late MainPageDataController _mainPageDataController;
   late MainPageData _mainPageData;
 
@@ -30,6 +35,7 @@ class MainPage extends ConsumerWidget {
         ref.watch(mainPageDataControllerProvider.notifier);
     _mainPageData = ref.watch(mainPageDataControllerProvider);
 
+    selectedMoviePosterUrl = ref.watch(selectedMoviePosterUrlProvider.state);
     _searchTextFieldController = TextEditingController();
 
     _searchTextFieldController.text = _mainPageData.searchText;
